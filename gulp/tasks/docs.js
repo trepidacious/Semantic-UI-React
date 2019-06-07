@@ -10,12 +10,13 @@ import gulpComponentMenu from '../plugins/gulp-component-menu'
 import gulpExampleMenu from '../plugins/gulp-example-menu'
 import gulpExampleSources from '../plugins/gulp-example-source'
 import gulpReactDocgen from '../plugins/gulp-react-docgen'
+import gulpReactComponentExport from '../plugins/gulp-react-component-export'
 
 const { paths } = config
 const g = loadPlugins()
 const { log } = g.util
 
-const handleWatchChange = filename =>
+const handleWatchChange = (filename) =>
   log(`File ${path.basename(filename)} was changed, running tasks...`)
 
 /**
@@ -114,6 +115,12 @@ task('build:docs:docgen', () =>
   src(componentsSrc, { since: lastRun('build:docs:docgen') })
     .pipe(gulpReactDocgen())
     .pipe(dest(paths.docsSrc('componentInfo'))),
+)
+
+task('build:docs:component-export', () =>
+  src(componentsSrc, { since: lastRun('build:docs:component-export') })
+    .pipe(gulpReactComponentExport())
+    .pipe(dest(paths.docsSrc('componentExport'))),
 )
 
 task('build:docs:component-menu', () =>
