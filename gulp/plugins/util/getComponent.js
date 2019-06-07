@@ -7,7 +7,7 @@ import config from '../../../config'
 // import parseDefaultValue from './parseDefaultValue'
 import parseDocblock from './parseDocblock'
 import parserCustomHandler from './parserCustomHandler'
-// import parseType from './parseType'
+import expandType from './expandType'
 
 const getComponent = (filepath) => {
   const absPath = path.resolve(process.cwd(), filepath)
@@ -102,20 +102,22 @@ const getComponent = (filepath) => {
   info.filenameWithoutExt = filenameWithoutExt
 
   // replace prop `description` strings with a parsed docblock object and updated `type`
-  // _.each(info.props, (propDef, propName) => {
-  //   const { description, tags } = parseDocblock(propDef.description)
-  //   const { name, value } = parseType(propName, propDef)
+  _.each(info.props, (propDef, propName) => {
+    // const docblock = parseDocblock(propDef.description)
+    const type = expandType(propName, propDef)
 
-  //   info.props[propName] = {
-  //     ...propDef,
-  //     description,
-  //     tags,
-  //     value,
-  //     defaultValue: parseDefaultValue(propDef),
-  //     name: propName,
-  //     type: name,
-  //   }
-  // })
+    info.props[propName] = {
+      ...propDef,
+      type,
+      // docblock
+      // description,
+      // tags,
+      // value,
+      // defaultValue: parseDefaultValue(propDef),
+      // name: propName,
+      // type: name,
+    }
+  })
 
   // sort props
   // info.props = _.sortBy(info.props, 'name')
